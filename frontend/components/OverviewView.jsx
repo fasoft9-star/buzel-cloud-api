@@ -10,6 +10,11 @@ import {
   Terminal,
   Server,
   HardDrive,
+  Bot,
+  Film,
+  Shield,
+  ChevronRight,
+  BookOpen,
 } from 'lucide-react';
 import { formatBytes } from './CdnView.jsx';
 
@@ -54,57 +59,147 @@ export default function OverviewView({ onNavigate }) {
     { key: '/upload', method: 'POST', path: '/upload', desc: 'Telegram Cloud Object Uploader' },
     { key: '/f', method: 'GET', path: '/f/:id', desc: 'CDN Media Stream Delivery' },
     { key: '/tiktok', method: 'GET', path: '/tiktok', desc: 'TikTok HD Video & Slide Extractor' },
+    { key: '/ig', method: 'GET', path: '/ig', desc: 'Instagram Reels, Video & Carousel Downloader' },
+    { key: '/pinterest', method: 'GET', path: '/pinterest', desc: 'Pinterest Search, Pin Video/Image DL, Stalk & Lens' },
     { key: '/play', method: 'GET', path: '/play', desc: 'YouTube & SoundCloud MP3 Transcoder' },
+    { key: '/ytmusic', method: 'GET', path: '/ytmusic', desc: 'YouTube Music Track, Stream, Lyrics & Charts' },
     { key: '/ai', method: 'POST', path: '/ai', desc: 'Google Gemini Multi-Turn Chat' },
+    { key: '/bota', method: 'POST', path: '/bota', desc: 'Bota.chat AI with Web Search & Session' },
+    { key: '/bratvid', method: 'GET', path: '/bratvid', desc: 'Animated 60FPS Brat Video & GIF Maker' },
     { key: '/turnstile', method: 'GET', path: '/turnstile', desc: 'Cloudflare Turnstile Token Solver' },
+  ];
+
+  const bentoFeatures = [
+    {
+      icon: Database,
+      tag: 'STORAGE BUCKET',
+      title: 'Telegram Cloud CDN',
+      desc: 'Store & stream images, audio, and video up to 20 MB per file directly from @buzelstorage with 0 MB VPS disk overhead.',
+      routes: ['POST /upload', 'GET /f/:id'],
+      tab: 'cdn',
+    },
+    {
+      icon: Film,
+      tag: 'MEDIA PIPELINE',
+      title: 'Social & Music Downloaders',
+      desc: 'Extract TikTok HD videos, Instagram Reels, Pinterest Pins/Lens, YouTube Music streams/lyrics, and YouTube/SoundCloud MP3s.',
+      routes: ['/tiktok', '/ig', '/pinterest', '/ytmusic', '/play'],
+      tab: 'playground',
+    },
+    {
+      icon: Bot,
+      tag: 'AI & AGENTS',
+      title: 'Multi-Turn LLM Gateway',
+      desc: 'Conversational AI endpoints powered by Google Gemini and Bota.chat with persistent session memory and live web search.',
+      routes: ['POST /ai', 'POST /bota'],
+      tab: 'playground',
+    },
+    {
+      icon: Shield,
+      tag: 'CANVAS & SECURITY',
+      title: 'Brat 60FPS & Turnstile Solver',
+      desc: 'Generate 1000x1000 60FPS animated Brat MP4/GIFs with Apple emojis and solve Cloudflare Turnstile challenges on demand.',
+      routes: ['/bratvid', '/turnstile'],
+      tab: 'playground',
+    },
   ];
 
   const ramPct = sys.ramTotalMb ? Math.round((sys.ramUsedMb / sys.ramTotalMb) * 100) : 0;
 
   return (
-    <div className="space-y-5">
-      <div className="bg-[#171717] border border-[#2e2e2e] rounded-md p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div className="space-y-1.5">
-          <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider bg-[#3ecf8e]/10 text-[#3ecf8e] border border-[#3ecf8e]/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#3ecf8e] animate-pulse" />
-              ACTIVE_HEALTHY
-            </span>
-            <span className="text-xs font-mono text-[#898989]">
-              Node {sys.nodeVersion || 'v22.x'} • {sys.platform || 'Linux x64'}
-            </span>
-          </div>
-          <h1 className="text-lg font-semibold text-white tracking-tight">
-            buzel-cloud — Edge REST API & Telegram Storage Gateway
-          </h1>
-          <p className="text-xs text-[#898989]">
-            Production instance serving WhatsApp Bot plugins, Telegram CDN bucket (@buzelstorage), and headless browser solvers.
-          </p>
-        </div>
+    <div className="space-y-6">
+      <div className="relative overflow-hidden bg-[#171717] border border-[#2e2e2e] rounded-md p-6 sm:p-8">
+        <div
+          className="pointer-events-none absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-15"
+          style={{
+            background: 'radial-gradient(circle, #3ecf8e 0%, transparent 70%)',
+          }}
+        />
 
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={() => onNavigate('cdn')}
-            className="px-3 py-1.5 rounded bg-[#3ecf8e] hover:bg-[#34b27b] text-[#0f0f0f] font-semibold text-xs inline-flex items-center gap-1.5 transition"
-          >
-            <Database className="w-3.5 h-3.5" />
-            <span>Open Storage Bucket</span>
-          </button>
-          <button
-            onClick={() => onNavigate('playground')}
-            className="px-3 py-1.5 rounded bg-[#1c1c1c] hover:bg-[#242424] border border-[#2e2e2e] text-white font-medium text-xs inline-flex items-center gap-1.5 transition"
-          >
-            <Zap className="w-3.5 h-3.5 text-[#3ecf8e]" />
-            <span>Test Edge Functions</span>
-          </button>
-          <button
-            onClick={loadMetrics}
-            className="p-1.5 rounded bg-[#1c1c1c] hover:bg-[#242424] border border-[#2e2e2e] text-[#898989] hover:text-white transition"
-            title="Refresh Telemetry"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-[#3ecf8e]' : ''}`} />
-          </button>
+        <div className="relative z-10 max-w-3xl space-y-4">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-[#1c1c1c] border border-[#2e2e2e] text-[11px] font-mono">
+            <span className="px-1.5 py-0.2 rounded bg-[#3ecf8e]/15 text-[#3ecf8e] font-semibold">
+              NEW
+            </span>
+            <span className="text-[#ededed]">
+              Brat 60FPS Video Maker, Instagram Reels & Bota AI Agent are live
+            </span>
+            <ChevronRight className="w-3.5 h-3.5 text-[#898989]" />
+          </div>
+
+          <h1 className="text-2xl sm:text-4xl font-bold tracking-tight leading-tight text-white">
+            Cloud Storage & Edge API.{' '}
+            <span className="block text-[#3ecf8e]">
+              Engineered for speed and zero disk limits.
+            </span>
+          </h1>
+
+          <p className="text-xs sm:text-sm text-[#898989] leading-relaxed max-w-2xl">
+            Buzel Cloud provides a unified REST API and Telegram-backed object storage bucket (
+            <code className="text-[#ededed] font-mono">@buzelstorage</code>). Built with modular Node.js ES Modules for WhatsApp bots, web apps, and automated pipelines.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-2.5 pt-1">
+            <button
+              onClick={() => onNavigate('cdn')}
+              className="px-4 py-2 rounded bg-[#3ecf8e] hover:bg-[#34b27b] text-[#0f0f0f] font-semibold text-xs inline-flex items-center gap-1.5 transition"
+            >
+              <Database className="w-3.5 h-3.5" />
+              <span>Open Storage Bucket</span>
+            </button>
+            <button
+              onClick={() => onNavigate('playground')}
+              className="px-4 py-2 rounded bg-[#1c1c1c] hover:bg-[#242424] border border-[#2e2e2e] text-white font-medium text-xs inline-flex items-center gap-1.5 transition"
+            >
+              <Zap className="w-3.5 h-3.5 text-[#3ecf8e]" />
+              <span>Test Edge Functions</span>
+            </button>
+            <button
+              onClick={() => onNavigate('docs')}
+              className="px-4 py-2 rounded bg-[#121212] hover:bg-[#1c1c1c] border border-[#2e2e2e] text-[#898989] hover:text-white font-medium text-xs inline-flex items-center gap-1.5 transition"
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>Documentation</span>
+            </button>
+          </div>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        {bentoFeatures.map((feat, i) => {
+          const Icon = feat.icon;
+          return (
+            <div
+              key={i}
+              onClick={() => onNavigate(feat.tab)}
+              className="group cursor-pointer bg-[#171717] hover:bg-[#1b1b1b] border border-[#2e2e2e] hover:border-[#3ecf8e]/50 rounded-md p-4 flex flex-col justify-between transition"
+            >
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-[#3ecf8e]">
+                    {feat.tag}
+                  </span>
+                  <div className="w-7 h-7 rounded bg-[#1c1c1c] border border-[#2e2e2e] group-hover:border-[#3ecf8e]/40 flex items-center justify-center text-[#ededed] group-hover:text-[#3ecf8e] transition">
+                    <Icon className="w-3.5 h-3.5" />
+                  </div>
+                </div>
+                <h3 className="text-sm font-semibold text-white">{feat.title}</h3>
+                <p className="text-xs text-[#898989] leading-relaxed">{feat.desc}</p>
+              </div>
+
+              <div className="pt-4 mt-4 border-t border-[#2e2e2e] flex flex-wrap gap-1.5">
+                {feat.routes.map((rt, ri) => (
+                  <span
+                    key={ri}
+                    className="px-1.5 py-0.5 rounded bg-[#121212] border border-[#2e2e2e] font-mono text-[10px] text-[#ededed]"
+                  >
+                    {rt}
+                  </span>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
@@ -171,16 +266,26 @@ export default function OverviewView({ onNavigate }) {
             <div className="flex items-center gap-2">
               <Server className="w-3.5 h-3.5 text-[#3ecf8e]" />
               <h3 className="text-xs font-mono font-semibold uppercase tracking-wider text-white">
-                Edge Endpoints & Telemetry
+                Edge Endpoints & Telemetry ({routeCatalog.length})
               </h3>
             </div>
-            <button
-              onClick={() => onNavigate('docs')}
-              className="text-[11px] font-mono text-[#3ecf8e] hover:underline flex items-center gap-1"
-            >
-              <span>API Reference</span>
-              <ArrowUpRight className="w-3 h-3" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={loadMetrics}
+                className="text-[11px] font-mono text-[#898989] hover:text-white flex items-center gap-1"
+              >
+                <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin text-[#3ecf8e]' : ''}`} />
+                <span>Refresh</span>
+              </button>
+              <span className="text-[#2e2e2e]">|</span>
+              <button
+                onClick={() => onNavigate('docs')}
+                className="text-[11px] font-mono text-[#3ecf8e] hover:underline flex items-center gap-1"
+              >
+                <span>API Reference</span>
+                <ArrowUpRight className="w-3 h-3" />
+              </button>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
@@ -228,7 +333,7 @@ export default function OverviewView({ onNavigate }) {
             <span className="text-[10px] font-mono text-[#898989]">Auto-refresh 5s</span>
           </div>
 
-          <div className="divide-y divide-[#2e2e2e] max-h-[310px] overflow-y-auto font-mono text-[11px]">
+          <div className="divide-y divide-[#2e2e2e] max-h-[340px] overflow-y-auto font-mono text-[11px]">
             {logs.length === 0 ? (
               <div className="p-8 text-center text-[#898989]">
                 Waiting for incoming HTTP traffic...

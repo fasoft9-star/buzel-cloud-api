@@ -1,4 +1,5 @@
 import { downloadTikTok, isValidTikTokUrl, playMusic } from '../services/downloader.service.js';
+import { downloadInstagram } from '../services/instagram.service.js';
 import { resolveBaseUrl } from '../utils/url.util.js';
 import { HttpError } from '../middlewares/error.middleware.js';
 
@@ -43,6 +44,27 @@ export async function playDownloader(req, res, next) {
 
     const baseUrl = resolveBaseUrl(req);
     const result = await playMusic(query, baseUrl);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+/**
+ * @param {import('express').Request<{}, {}, { url?: string }, { url?: string }>} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ * @returns {Promise<void>}
+ */
+export async function instagramDownloader(req, res, next) {
+  try {
+    const url = (req.body?.url || req.query.url || '').toString().trim();
+
+    if (!url) {
+      throw new HttpError(400, 'Parameter url is required');
+    }
+
+    const result = await downloadInstagram(url);
     res.status(200).json(result);
   } catch (err) {
     next(err);

@@ -23,10 +23,15 @@ let totalDurationMs = 0;
 /** @type {Record<string, { count: number, avgMs: number, errors: number }>} */
 const endpointStats = {
   '/tiktok': { count: 0, avgMs: 0, errors: 0 },
+  '/ig': { count: 0, avgMs: 0, errors: 0 },
+  '/pinterest': { count: 0, avgMs: 0, errors: 0 },
   '/play': { count: 0, avgMs: 0, errors: 0 },
+  '/ytmusic': { count: 0, avgMs: 0, errors: 0 },
   '/upload': { count: 0, avgMs: 0, errors: 0 },
   '/f': { count: 0, avgMs: 0, errors: 0 },
   '/ai': { count: 0, avgMs: 0, errors: 0 },
+  '/bota': { count: 0, avgMs: 0, errors: 0 },
+  '/bratvid': { count: 0, avgMs: 0, errors: 0 },
   '/turnstile': { count: 0, avgMs: 0, errors: 0 },
 };
 
@@ -39,10 +44,15 @@ const recentLogs = [];
  */
 function matchTrackedEndpoint(rawPath) {
   if (rawPath.startsWith('/tiktok')) return '/tiktok';
+  if (rawPath.startsWith('/ig') || rawPath.startsWith('/instagram')) return '/ig';
+  if (rawPath.startsWith('/pinterest') || rawPath.startsWith('/pin')) return '/pinterest';
   if (rawPath.startsWith('/play')) return '/play';
+  if (rawPath.startsWith('/ytmusic') || rawPath.startsWith('/ytm')) return '/ytmusic';
   if (rawPath.startsWith('/upload')) return '/upload';
   if (rawPath.startsWith('/f/') || rawPath.startsWith('/file/')) return '/f';
   if (rawPath.startsWith('/ai') || rawPath.startsWith('/gemini')) return '/ai';
+  if (rawPath.startsWith('/bota')) return '/bota';
+  if (rawPath.startsWith('/brat')) return '/bratvid';
   if (rawPath.startsWith('/turnstile')) return '/turnstile';
   return null;
 }

@@ -5,14 +5,34 @@ import downloaderRoutes from './routes/downloader.routes.js';
 import cdnRoutes from './routes/cdn.routes.js';
 import aiRoutes from './routes/ai.routes.js';
 import botaRoutes from './routes/bota.routes.js';
+import bratRoutes from './routes/brat.routes.js';
 import turnstileRoutes from './routes/turnstile.routes.js';
+import ytmusicRoutes from './routes/ytmusic.routes.js';
+import pinterestRoutes from './routes/pinterest.routes.js';
 import { AUDIO_CACHE_DIR } from './services/downloader.service.js';
+import { BRAT_CACHE_DIR } from './services/brat.service.js';
 import { resolveBaseUrl } from './utils/url.util.js';
 import { metricsMiddleware, getMetricsHandler } from './middlewares/metrics.middleware.js';
 import { notFoundHandler, errorHandler } from './middlewares/error.middleware.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const PUBLIC_DIR = path.resolve(__dirname, '../public');
+
+const ENDPOINTS = [
+  '/tiktok',
+  '/ig',
+  '/pinterest',
+  '/play',
+  '/ytmusic',
+  '/upload',
+  '/cdn',
+  '/f/:id',
+  '/gemini',
+  '/ai',
+  '/bota',
+  '/bratvid',
+  '/turnstile',
+];
 
 /**
  * @returns {import('express').Application}
@@ -25,16 +45,19 @@ export function createApp() {
   app.use(metricsMiddleware);
 
   app.use('/assets', express.static(path.join(PUBLIC_DIR, 'assets')));
+  app.use('/downloads', express.static(path.join(PUBLIC_DIR, 'downloads')));
   app.use('/audio', express.static(AUDIO_CACHE_DIR));
+  app.use('/brat-media', express.static(BRAT_CACHE_DIR));
 
   app.get('/api/status', (req, res) => {
     const baseUrl = resolveBaseUrl(req);
     res.status(200).json({
       success: true,
       publicUrl: baseUrl,
-      cdnDashboard: `${baseUrl}/cdn`,        endpoints: ['/tiktok', '/play', '/upload', '/cdn', '/f/:id', '/gemini', '/ai', '/bota', '/turnstile'],
-      });
+      cdnDashboard: `${baseUrl}/cdn`,
+      endpoints: ENDPOINTS,
     });
+  });
 
   app.get('/api/metrics', getMetricsHandler);
 
@@ -46,7 +69,7 @@ export function createApp() {
         success: true,
         publicUrl: baseUrl,
         cdnDashboard: `${baseUrl}/cdn`,
-        endpoints: ['/tiktok', '/play', '/upload', '/cdn', '/f/:id', '/gemini', '/ai', '/bota', '/turnstile'],
+        endpoints: ENDPOINTS,
       });
       return;
     }
@@ -57,7 +80,10 @@ export function createApp() {
   app.use('/', cdnRoutes);
   app.use('/', aiRoutes);
   app.use('/', botaRoutes);
+  app.use('/', bratRoutes);
   app.use('/', turnstileRoutes);
+  app.use('/', ytmusicRoutes);
+  app.use('/', pinterestRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

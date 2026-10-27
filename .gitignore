@@ -3,3 +3,7 @@ data/
 .env
 *.log
 .DS_Store
+public/downloads/
+public/brat-media/
+src/services/emoji-cache/
+src/services/impact.ttf
