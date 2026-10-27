@@ -19,6 +19,7 @@ Production-grade **Express.js (ESM)** REST API & **Supabase Studio-inspired Reac
 - **🎬 TikTok Downloader (`/tiktok`)**: Extracts HD watermark-free video, photo slides, author info, and MP3 audio.
 - **🎵 Music Play MP3 (`/play`)**: Searches YouTube (with SoundCloud fallback) and transcodes audio to MP3 via `yt-dlp` + `ffmpeg-static`.
 - **🤖 Gemini AI Chat (`/ai`, `/gemini`)**: Multi-turn conversational AI with `sessionId` continuation.
+- **🤖 Bota AI Chat (`/bota`)**: Anonymous guest chat via the Bota.chat frame API — zero API key, in-memory session continuation with `chatId`, web-search tool support.
 - **🛡️ Cloudflare Turnstile Solver (`/turnstile`)**: On-demand headless Chrome + Xvfb solver with automatic zero-idle cleanup.
 
 ---
@@ -47,5 +48,6 @@ npm start
 | `GET / POST` | `/tiktok` | Download TikTok video or photo slide (`?url=`) |
 | `GET / POST` | `/play` | Search and convert song to MP3 (`?q=`) |
 | `GET / POST` | `/ai` | Chat with Google Gemini (`prompt`, optional `sessionId`) |
+| `GET / POST` | `/bota` | Chat with Bota.chat AI (anonymous guest; `message`, optional `model`, `web_search`, `chatId`) |
 | `GET / POST` | `/turnstile` | Solve Cloudflare Turnstile (`?url=&sitekey=`) |
 | `GET` | `/api/metrics` | Real-time server telemetry & request logs |

@@ -4,6 +4,7 @@ import express from 'express';
 import downloaderRoutes from './routes/downloader.routes.js';
 import cdnRoutes from './routes/cdn.routes.js';
 import aiRoutes from './routes/ai.routes.js';
+import botaRoutes from './routes/bota.routes.js';
 import turnstileRoutes from './routes/turnstile.routes.js';
 import { AUDIO_CACHE_DIR } from './services/downloader.service.js';
 import { resolveBaseUrl } from './utils/url.util.js';
@@ -31,10 +32,9 @@ export function createApp() {
     res.status(200).json({
       success: true,
       publicUrl: baseUrl,
-      cdnDashboard: `${baseUrl}/cdn`,
-      endpoints: ['/tiktok', '/play', '/upload', '/cdn', '/f/:id', '/gemini', '/ai', '/turnstile'],
+      cdnDashboard: `${baseUrl}/cdn`,        endpoints: ['/tiktok', '/play', '/upload', '/cdn', '/f/:id', '/gemini', '/ai', '/bota', '/turnstile'],
+      });
     });
-  });
 
   app.get('/api/metrics', getMetricsHandler);
 
@@ -46,7 +46,7 @@ export function createApp() {
         success: true,
         publicUrl: baseUrl,
         cdnDashboard: `${baseUrl}/cdn`,
-        endpoints: ['/tiktok', '/play', '/upload', '/cdn', '/f/:id', '/gemini', '/ai', '/turnstile'],
+        endpoints: ['/tiktok', '/play', '/upload', '/cdn', '/f/:id', '/gemini', '/ai', '/bota', '/turnstile'],
       });
       return;
     }
@@ -56,6 +56,7 @@ export function createApp() {
   app.use('/', downloaderRoutes);
   app.use('/', cdnRoutes);
   app.use('/', aiRoutes);
+  app.use('/', botaRoutes);
   app.use('/', turnstileRoutes);
 
   app.use(notFoundHandler);
